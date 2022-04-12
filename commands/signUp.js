@@ -23,7 +23,7 @@ export const signUp = async ({ email, password, username }) => {
 
 	//conf.set("localUser-info", userInfo);
 	await axios
-		.post("http://localhost:3000/", {
+		.post("http://server-password-manager.herokuapp.com/", {
 			email: email,
 			username: username,
 		})

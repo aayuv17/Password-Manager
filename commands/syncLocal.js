@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const syncLocal = async ({ email, username }) => {
 	await axios
-		.post("http://localhost:3000/syncLocal", {
+		.post("http://server-password-manager.herokuapp.com/syncLocal", {
 			username: username,
 			email: email,
 		})

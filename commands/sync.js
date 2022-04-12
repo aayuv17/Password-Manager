@@ -20,7 +20,7 @@ export const sync = async ({ pass }) => {
 					return;
 				}
 				await axios
-					.post("http://localhost:3000/sync", {
+					.post("http://server-password-manager.herokuapp.com/sync", {
 						username: userInfo.username,
 						key: keyData,
 						password: passwordData,
