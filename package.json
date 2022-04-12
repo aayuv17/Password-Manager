@@ -19,7 +19,7 @@
     "crypto-js": "^4.1.1"
   },
   "bin": {
-    "todos": "./index.js"
+    "password-manager": "./index.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
