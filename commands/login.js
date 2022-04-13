@@ -10,5 +10,5 @@ export const login = async ({ password, username }) => {
 		password: sha256(password).toString(),
 	};
 	conf.set("localUser-info", userInfo);
-	console.log(chalk.green.bold("Done"));
+	console.log(chalk.green.bold("Login successful"));
 };

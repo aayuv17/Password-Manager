@@ -2,30 +2,6 @@
 import { Command } from "commander";
 
 const program = new Command();
-//const { program } = require("commander");
-
-{
-	/*import list from "./commands/list.js";
-import { add } from "./commands/add.js";
-import { markDone } from "./commands/markDone.js";
-
-program
-	.name("string-util")
-	.description("CLI to some JavaScript string utilities")
-	.version("0.8.0");
-
-program.command("list").description("List all the TODO tasks").action(list);
-program.command("add <task>").description("Add a new TODO task").action(add);
-program
-	.command("mark-done")
-	.description("Mark commands done")
-	.option(
-		"-t, --tasks <tasks...>",
-		"The tasks to mark done. If not specified, all tasks will be marked done."
-	)
-	.action(markDone);
-    program.parse();*/
-}
 
 import { signUp } from "./commands/signUp.js";
 import { login } from "./commands/login.js";
@@ -36,6 +12,7 @@ import { deleteCredential } from "./commands/deleteCredential.js";
 import { logout } from "./commands/logout.js";
 import { sync } from "./commands/sync.js";
 import { syncLocal } from "./commands/syncLocal.js";
+import { listCredentials } from "./commands/listCredentials.js";
 
 program
 	.name("password manager")
@@ -45,61 +22,82 @@ program
 program
 	.command("sign-up")
 	.description("register user")
-	.option("-u, --username <username>", "The username")
-	.option("-e, --email <email>", "The email to register")
-	.option("-pass, --password <password>", "The password")
+	.option("-u, --username <username>", "Enter username")
+	.option("-e, --email <email>", "Enter email")
+	.option("-p, --password <password>", "Enter master password")
 	.action(signUp);
+
 program
 	.command("login")
 	.description("login")
-	.option("-u, --username <username>", "The username")
-	.option("-pass, --password <password>", "The password")
+	.option("-u, --username <username>", "Enter username")
+	.option("-p, --password <password>", "Enter master password")
 	.action(login);
+
 program
-	.command("get-pass")
-	.description("login")
-	.option("-k, --key <key>", "The account name for which password is needed")
+	.command("list-cred")
+	.description("list all credentials for a particular account")
+	.option("-u, --username <username>", "Enter username")
+	.option("-p, --password <password>", "Enter master password")
+	.action(listCredentials);
+
+program
+	.command("get-cred")
+	.description("get credentials for a particular account")
+	.option("-k, --key <key>", "The account for which credentials are needed")
 	.action(getCredential);
+
 program
-	.command("new-pass")
-	.description("login")
-	.option("-k, --key <key>", "The account name for which password is needed")
-	.option("-p, --pass <pass>", "The password")
-	.option("-u, --user <user>", "The password")
+	.command("create-cred")
+	.description("create new credentials")
+	.option(
+		"-k, --key <key>",
+		"The account for which credentials are being created"
+	)
+	.option("-p, --password <password>", "Enter password associated with account")
+	.option("-u, --username <username>", "Enter username associated with account")
 	.action(createCredential);
+
 program
-	.command("update-pass")
-	.description("login")
-	.option("-k, --key <key>", "The account name for which password is needed")
-	.option("-p, --pass <pass>", "The password")
-	.option("-u, --user <user>", "The password")
+	.command("update-cred")
+	.description("update user password associated with an account")
+	.option(
+		"-k, --key <key>",
+		"The account for which credentials are being updated"
+	)
+	.option("-p, --password <password>", "Enter updated password")
+	.option(
+		"-u, --username <username>",
+		"Enter username associated with the account"
+	)
 	.action(updateCredential);
+
 program
-	.command("delete-pass")
-	.description("login")
-	.option("-k, --key <key>", "The account name for which password is needed")
+	.command("delete-cred")
+	.description("delete credentials associated with an account")
+	.option(
+		"-k, --key <key>",
+		"The account for which credentials are being deleted"
+	)
+	.option(
+		"-u, --username <username>",
+		"Enter username associated with the account"
+	)
 	.action(deleteCredential);
-program.command("logout").description("login").action(logout);
+
+program.command("logout").description("logout").action(logout);
+
 program
 	.command("sync")
-	.description("login")
-	.option("-p, --pass <pass>", "The account name for which password is needed")
+	.description("sync local keys & passwords with online server")
+	.option("-p, --password <password>", "Enter master password")
 	.action(sync);
+
 program
 	.command("sync-local")
-	.description("login")
-	.option("-e, --email <email>", "The password")
-	.option("-u, --username <username>", "The password")
+	.description("get key & password data from online server & store locally")
+	.option("-e, --email <email>", "Enter email")
+	.option("-u, --username <username>", "Enter username")
 	.action(syncLocal);
 
-{
-	/*program
-	.version("0.1.0")
-	.argument("<username>", "user to login")
-	.argument("[password]", "password for user, if required", "no password given")
-	.action((username, password) => {
-		console.log("username:", username);
-		console.log("password:", password);
-	});*/
-}
 program.parse();

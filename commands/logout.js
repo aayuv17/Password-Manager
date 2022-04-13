@@ -6,5 +6,5 @@ import chalk from "chalk";
 export const logout = async () => {
 	const userInfo = {};
 	conf.set("localUser-info", userInfo);
-	console.log(chalk.green.bold("Done"));
+	console.log(chalk.green.bold("Logout successful."));
 };

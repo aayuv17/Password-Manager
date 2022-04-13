@@ -5,11 +5,10 @@ import chalk from "chalk";
 import fs from "fs";
 import crypto from "crypto";
 
-export const updateCredential = async ({ key, pass, user }) => {
+export const updateCredential = async ({ key, password, username }) => {
 	const userInfo = conf.get("localUser-info");
-	console.log(userInfo);
+	//console.log(userInfo);
 	const algorithm = "aes-256-cbc";
-	// generate key with crypto.randomBytes(256/8).toString('hex')
 	const IV_LENGTH = 16;
 	const encrypt = (text, keyUsed) => {
 		const iv = crypto.randomBytes(IV_LENGTH);
@@ -38,10 +37,10 @@ export const updateCredential = async ({ key, pass, user }) => {
 	fs.readFile("key.txt", "utf-8", (err, data) => {
 		if (err) throw err;
 		var decrypted = decrypt(data.toString(), userInfo.password);
-		console.log("This is the decrypted key", decrypted);
+		//console.log("This is the decrypted key", decrypted);
 
 		fs.readFile("passwords.txt", "utf8", (err, jsonString) => {
-			console.log("This is jsonString", jsonString);
+			//console.log("This is jsonString", jsonString);
 			if (err) {
 				console.log("File read failed:", err);
 				return;
@@ -49,32 +48,35 @@ export const updateCredential = async ({ key, pass, user }) => {
 			if (jsonString) {
 				jsonString = decrypt(jsonString, decrypted);
 				jsonString = JSON.parse(jsonString);
-				console.log("File data:", jsonString);
-				jsonString["accounts"][key] = {
-					username: user,
-					password: pass,
-				};
+				//console.log("File data:", jsonString);
+				for (var i = 0; i < jsonString["accounts"][key].length; i++) {
+					if (jsonString["accounts"][key][i].username === username) {
+						jsonString["accounts"][key][i].password = password;
+						break;
+					}
+				}
 				console.log(jsonString);
 				jsonString = JSON.stringify(jsonString);
 				console.log(jsonString);
+				console.log(
+					chalk.green.bold(
+						`Successfully updated credentials for ${key} & ${username}`
+					)
+				);
 			} else {
-				jsonString = { accounts: {} };
-				jsonString["accounts"][key] = {
-					username: user,
-					password: pass,
-				};
-				console.log(jsonString);
-				jsonString = JSON.stringify(jsonString);
-				console.log(jsonString);
+				console.log(
+					chalk.red.bold(
+						"No such credential exists. Please check the username & account entered."
+					)
+				);
 			}
 
 			var encrypted = encrypt(jsonString, decrypted);
-			console.log(encrypted);
+			//console.log(encrypted);
 			fs.writeFile("passwords.txt", encrypted, (err) => {
 				if (err) throw err;
-				else console.log("Successful");
+				//else console.log("Successful");
 			});
 		});
 	});
-	console.log(chalk.green.bold("Done"));
 };

@@ -5,11 +5,10 @@ import chalk from "chalk";
 import fs from "fs";
 import crypto from "crypto";
 
-export const deleteCredential = async ({ key }) => {
+export const deleteCredential = async ({ key, username }) => {
 	const userInfo = conf.get("localUser-info");
-	console.log(userInfo);
+	//console.log(userInfo);
 	const algorithm = "aes-256-cbc";
-	// generate key with crypto.randomBytes(256/8).toString('hex')
 	const IV_LENGTH = 16;
 	const encrypt = (text, keyUsed) => {
 		const iv = crypto.randomBytes(IV_LENGTH);
@@ -39,28 +38,40 @@ export const deleteCredential = async ({ key }) => {
 	fs.readFile("key.txt", "utf-8", (err, data) => {
 		if (err) throw err;
 		var decrypted = decrypt(data.toString(), userInfo.password);
-		console.log("This is the decrypted key", decrypted);
+		//console.log("This is the decrypted key", decrypted);
 		fs.readFile("passwords.txt", "utf8", (err, jsonString) => {
 			if (err) {
 				console.log("File read failed:", err);
 				return;
 			}
-			console.log("File data:", jsonString);
+			//console.log("File data:", jsonString);
 			var val = decrypt(jsonString, decrypted);
-			console.log(val);
+			//console.log(val);
 			val = JSON.parse(val);
-			console.log(val);
-			console.log(key);
-			delete val["accounts"][key];
-			console.log(val);
+			//console.log(val);
+			//console.log(key);
+			var flag = 0;
+			for (var i = 0; i < val["accounts"][key].length; i++) {
+				if (val["accounts"][key][i].username === username) {
+					delete val["accounts"][key][i];
+					console.log(chalk.green.bold("Deleted credential"));
+					flag = 1;
+					break;
+				}
+			}
+			if (flag === 0) {
+				console.log(
+					"No such credential exists. Please check the username & account entered"
+				);
+			}
+			//console.log(val);
 			val = JSON.stringify(val);
 			var encrypted = encrypt(val, decrypted);
-			console.log(encrypted);
+			//console.log(encrypted);
 			fs.writeFile("passwords.txt", encrypted, (err) => {
 				if (err) throw err;
-				else console.log("Successful");
+				//else console.log("Successful");
 			});
 		});
 	});
-	console.log(chalk.green.bold("Done"));
 };
