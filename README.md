@@ -43,7 +43,7 @@ Data stored on user's local device:
 To install & correctly use this tool:
 
 1. Clone this repository using the command: git clone https://github.com/aayuv17/Password-Manager.git
-2. Go to the directory where the clone repository is stored
+2. Go to the directory where the clone repository is stored. Use command: cd password-manager
 3. Execute the command: npm install
 4. Execute the command: npm i -g
 5. Execute the command: password-manager help
