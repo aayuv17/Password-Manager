@@ -36,6 +36,11 @@ Data stored on user's local device:
 3. The decrypted symmetric key is used to subsequently encrypt/decrypt passwords.txt
 4. All changes made to the passwords are implemented only locally untill the user pushes the changes to the server (using sync command) or pulls changes from the server (using sync-local command)
 
+## Requirements
+
+- Install Node.js
+- Install npm
+
 ## Installation
 
 To install & correctly use this tool:
