@@ -4,10 +4,13 @@ const conf = new Conf();
 import chalk from "chalk";
 import fs from "fs";
 import crypto from "crypto";
+import { generatePassword } from "./generatePassword.js";
+import * as readline from "readline";
+import { stdin as input, stdout as output } from "node:process";
 
-export const createCredential = async ({ key, password, username }) => {
+export const createCredential = async ({ key, genpass, username }) => {
 	const userInfo = conf.get("localUser-info");
-	console.log(userInfo);
+	const rl = readline.createInterface({ input, output });
 	const algorithm = "aes-256-cbc";
 	const IV_LENGTH = 16;
 	const encrypt = (text, keyUsed) => {
@@ -34,57 +37,99 @@ export const createCredential = async ({ key, password, username }) => {
 		decrypted = Buffer.concat([decrypted, decipher.final()]);
 		return decrypted.toString();
 	};
-	fs.readFile("key.txt", "utf-8", (err, data) => {
-		if (err) throw err;
-		var decrypted = decrypt(data.toString(), userInfo.password);
-		//console.log("This is the decrypted key", decrypted);
-
-		fs.readFile("passwords.txt", "utf8", (err, jsonString) => {
-			//console.log("This is jsonString", jsonString);
-			if (err) {
-				console.log("File read failed:", err);
-				return;
-			}
-			if (jsonString) {
-				jsonString = decrypt(jsonString, decrypted);
-				jsonString = JSON.parse(jsonString);
-				//console.log("File data:", jsonString);
-				if (jsonString["accounts"][key]) {
-					jsonString["accounts"][key].push({
-						username: username,
-						password: password,
-					});
+	var password;
+	if (genpass) {
+		password = generatePassword();
+		console.log("The generated password is ", password);
+		fs.readFile("key.txt", "utf-8", (err, data) => {
+			if (err) throw err;
+			var decrypted = decrypt(data.toString(), userInfo.password);
+			fs.readFile("passwords.txt", "utf8", (err, jsonString) => {
+				if (err) {
+					console.log("File read failed:", err);
+					return;
+				}
+				if (jsonString) {
+					jsonString = decrypt(jsonString, decrypted);
+					jsonString = JSON.parse(jsonString);
+					if (jsonString["accounts"][key]) {
+						jsonString["accounts"][key].push({
+							username: username,
+							password: password,
+						});
+					} else {
+						jsonString["accounts"][key] = [
+							{
+								username: username,
+								password: password,
+							},
+						];
+					}
+					jsonString = JSON.stringify(jsonString);
 				} else {
+					jsonString = { accounts: {} };
 					jsonString["accounts"][key] = [
 						{
 							username: username,
 							password: password,
 						},
 					];
+					jsonString = JSON.stringify(jsonString);
 				}
-				//console.log(jsonString);
-				jsonString = JSON.stringify(jsonString);
-				//console.log(jsonString);
-			} else {
-				jsonString = { accounts: {} };
-				jsonString["accounts"][key] = [
-					{
-						username: username,
-						password: password,
-					},
-				];
-				//console.log(jsonString);
-				jsonString = JSON.stringify(jsonString);
-				//console.log(jsonString);
-			}
-
-			var encrypted = encrypt(jsonString, decrypted);
-			//console.log(encrypted);
-			fs.writeFile("passwords.txt", encrypted, (err) => {
-				if (err) throw err;
-				//else console.log("Successful");
+				var encrypted = encrypt(jsonString, decrypted);
+				fs.writeFile("passwords.txt", encrypted, (err) => {
+					if (err) throw err;
+				});
 			});
 		});
-	});
-	console.log(chalk.green.bold("Created credential"));
+		console.log(chalk.green.bold("Created credential"));
+		rl.close();
+	} else {
+		rl.question("Enter password: ", (val) => {
+			password = val;
+			fs.readFile("key.txt", "utf-8", (err, data) => {
+				if (err) throw err;
+				var decrypted = decrypt(data.toString(), userInfo.password);
+				fs.readFile("passwords.txt", "utf8", (err, jsonString) => {
+					if (err) {
+						console.log("File read failed:", err);
+						return;
+					}
+					if (jsonString) {
+						jsonString = decrypt(jsonString, decrypted);
+						jsonString = JSON.parse(jsonString);
+						if (jsonString["accounts"][key]) {
+							jsonString["accounts"][key].push({
+								username: username,
+								password: password,
+							});
+						} else {
+							jsonString["accounts"][key] = [
+								{
+									username: username,
+									password: password,
+								},
+							];
+						}
+						jsonString = JSON.stringify(jsonString);
+					} else {
+						jsonString = { accounts: {} };
+						jsonString["accounts"][key] = [
+							{
+								username: username,
+								password: password,
+							},
+						];
+						jsonString = JSON.stringify(jsonString);
+					}
+					var encrypted = encrypt(jsonString, decrypted);
+					fs.writeFile("passwords.txt", encrypted, (err) => {
+						if (err) throw err;
+					});
+				});
+			});
+			console.log(chalk.green.bold("Created credential"));
+			rl.close();
+		});
+	}
 };

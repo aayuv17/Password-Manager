@@ -7,7 +7,6 @@ import crypto from "crypto";
 
 export const updateCredential = async ({ key, password, username }) => {
 	const userInfo = conf.get("localUser-info");
-	//console.log(userInfo);
 	const algorithm = "aes-256-cbc";
 	const IV_LENGTH = 16;
 	const encrypt = (text, keyUsed) => {
@@ -37,10 +36,8 @@ export const updateCredential = async ({ key, password, username }) => {
 	fs.readFile("key.txt", "utf-8", (err, data) => {
 		if (err) throw err;
 		var decrypted = decrypt(data.toString(), userInfo.password);
-		//console.log("This is the decrypted key", decrypted);
 
 		fs.readFile("passwords.txt", "utf8", (err, jsonString) => {
-			//console.log("This is jsonString", jsonString);
 			if (err) {
 				console.log("File read failed:", err);
 				return;
@@ -48,7 +45,6 @@ export const updateCredential = async ({ key, password, username }) => {
 			if (jsonString) {
 				jsonString = decrypt(jsonString, decrypted);
 				jsonString = JSON.parse(jsonString);
-				//console.log("File data:", jsonString);
 				for (var i = 0; i < jsonString["accounts"][key].length; i++) {
 					if (jsonString["accounts"][key][i].username === username) {
 						jsonString["accounts"][key][i].password = password;
@@ -72,10 +68,8 @@ export const updateCredential = async ({ key, password, username }) => {
 			}
 
 			var encrypted = encrypt(jsonString, decrypted);
-			//console.log(encrypted);
 			fs.writeFile("passwords.txt", encrypted, (err) => {
 				if (err) throw err;
-				//else console.log("Successful");
 			});
 		});
 	});

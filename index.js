@@ -24,21 +24,18 @@ program
 	.description("register user")
 	.option("-u, --username <username>", "Enter username")
 	.option("-e, --email <email>", "Enter email")
-	.option("-p, --password <password>", "Enter master password")
 	.action(signUp);
 
 program
 	.command("login")
 	.description("login")
 	.option("-u, --username <username>", "Enter username")
-	.option("-p, --password <password>", "Enter master password")
 	.action(login);
 
 program
 	.command("list-cred")
 	.description("list all credentials for a particular account")
 	.option("-u, --username <username>", "Enter username")
-	.option("-p, --password <password>", "Enter master password")
 	.action(listCredentials);
 
 program
@@ -54,8 +51,8 @@ program
 		"-k, --key <key>",
 		"The account for which credentials are being created"
 	)
-	.option("-p, --password <password>", "Enter password associated with account")
 	.option("-u, --username <username>", "Enter username associated with account")
+	.option("--genpass", "Use an automatically generated password")
 	.action(createCredential);
 
 program
@@ -90,7 +87,6 @@ program.command("logout").description("logout").action(logout);
 program
 	.command("sync")
 	.description("sync local keys & passwords with online server")
-	.option("-p, --password <password>", "Enter master password")
 	.action(sync);
 
 program
