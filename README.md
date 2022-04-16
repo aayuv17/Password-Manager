@@ -1,19 +1,17 @@
 # Password Manager
 
-A password manager based on Zero Knowledge Architecture
+A Node.js-based Command Line Password Manager based on Zero Knowledge Architecture
 
 ## Introduction
 
 Zero Knowledge Architecture refers to the design practice where only the user knows what is stored in their vault and no one else, including the server side vendor, can see the stored information. Encryption is performed using secure cryptographic algorithms on the client side only. So the user's password is essentially never stored in plaintext or sent to the server.
-
-This is an implementation of a node.js based command line tool that acts as a password manager based on Zero Knowledge Architecture.
 
 ## Model
 
 The main components of our model are:
 
 - client-side command line tool (implemented using node.js)
-- server (implemented using express.js & deployed on Heroku)
+- server (implemented using express.js & deployed on Heroku: https://server-password-manager.herokuapp.com)
 - database (mongodb database to store user information)
 
 The cryptographic algorithms used are:
