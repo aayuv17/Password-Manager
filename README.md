@@ -38,18 +38,50 @@ Data stored on user's local device:
 3. The decrypted symmetric key is used to subsequently encrypt/decrypt passwords.txt
 4. All changes made to the passwords are implemented only locally untill the user pushes the changes to the server (using sync command) or pulls changes from the server (using sync-local command)
 
-## Usage
+## Installation
 
 To install & correctly use this tool:
 
 1. Clone this repository using the command: git clone https://github.com/aayuv17/Password-Manager.git
-2. Go to the directory where the clone repository is stored. Use command: cd password-manager
+2. Go to the directory where the clone repository is stored
 3. Execute the command: npm install
 4. Execute the command: npm i -g
-5. Execute the command: password-manager help
-6. The guidelines mentioned in the help instructions can be used to execute various operations with the tool now.
 
-### Tool Commands Usage
+![Installation](./images/installation.png)
+
+## Usage
 
 - password-manager help
+
   ![Help Command](./images/help.png)
+
+- password-manager sign-up // Command to create a new account. Using the --genpass flag assigns a programmatically generated strong password
+- password-manager login // Command to log in to a local account
+
+![Signup & Login Commands](./images/signupandlogin.png)
+
+- password-manager create-cred // Command to create a new credential. Using the --genpass flag assigns a programmatically generated strong password
+
+![Create Credentials Command](./images/createcred.png)
+
+- password-manager list-cred // Command to list all user credentials
+- password-manager get-cred // Command to get a specific user credential
+
+![List & Get Credentials Commands](./images/listandgetcred.png)
+
+- password-manager update-cred // Command to update a credential
+
+![Update Credentials Command](./images/updatecred.png)
+
+- password-manager delete-cred // Command to delete a credential
+
+![Delete Credentials Command](./images/deletecred.png)
+
+- password-manager sync // Command to sync local data to online database
+- password-manager logout // Command to logout
+
+![Sync & Logout Commands](./images/syncandlogout.png)
+
+- password-manager sync-local // Command to sync data from online database to local device to allow users to access passwords from multiple devices
+
+![Sync Local Command](./images/synclocal.png)
