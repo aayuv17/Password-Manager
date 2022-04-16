@@ -3,25 +3,11 @@ const conf = new Conf();
 
 import chalk from "chalk";
 import fs from "fs";
-import crypto from "crypto";
+
+import { decrypt } from "../utils/AESDecrypt.js";
 
 export const getCredential = async ({ key }) => {
 	const userInfo = conf.get("localUser-info");
-	const algorithm = "aes-256-cbc";
-	const decrypt = (text, keyUsed) => {
-		const [iv, encryptedText] = text
-			.split(":")
-			.map((part) => Buffer.from(part, "hex"));
-		const decipher = crypto.createDecipheriv(
-			algorithm,
-			Buffer.from(keyUsed, "hex"),
-			iv
-		);
-		let decrypted = decipher.update(encryptedText);
-		decrypted = Buffer.concat([decrypted, decipher.final()]);
-		return decrypted.toString();
-	};
-
 	fs.readFile("key.txt", "utf-8", (err, data) => {
 		if (err) throw err;
 		var decrypted = decrypt(data.toString(), userInfo.password);
@@ -33,7 +19,9 @@ export const getCredential = async ({ key }) => {
 			var val = decrypt(jsonString, decrypted);
 			val = JSON.parse(val);
 			if (val["accounts"][key])
-				console.log(chalk.green.bold(JSON.stringify(val["accounts"][key])));
+				console.log(
+					chalk.green.bold(JSON.stringify(val["accounts"][key], null, 2))
+				);
 			else
 				console.log(
 					chalk.red.bold(

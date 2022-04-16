@@ -24,6 +24,7 @@ program
 	.description("register user")
 	.option("-u, --username <username>", "Enter username")
 	.option("-e, --email <email>", "Enter email")
+	.option("--genpass", "Use an automatically generated password")
 	.action(signUp);
 
 program

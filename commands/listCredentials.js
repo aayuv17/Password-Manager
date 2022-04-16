@@ -3,28 +3,16 @@ const conf = new Conf();
 
 import chalk from "chalk";
 import fs from "fs";
-import crypto from "crypto";
 import sha256 from "crypto-js/sha256.js";
 import * as readline from "readline";
 import { stdin as input, stdout as output } from "node:process";
 
+import { decrypt } from "../utils/AESDecrypt.js";
+
 export const listCredentials = async ({ username }) => {
 	const rl = readline.createInterface({ input, output });
 	const userInfo = conf.get("localUser-info");
-	const algorithm = "aes-256-cbc";
-	const decrypt = (text, keyUsed) => {
-		const [iv, encryptedText] = text
-			.split(":")
-			.map((part) => Buffer.from(part, "hex"));
-		const decipher = crypto.createDecipheriv(
-			algorithm,
-			Buffer.from(keyUsed, "hex"),
-			iv
-		);
-		let decrypted = decipher.update(encryptedText);
-		decrypted = Buffer.concat([decrypted, decipher.final()]);
-		return decrypted.toString();
-	};
+
 	rl.question("Enter master password: ", (master) => {
 		if (
 			username === userInfo.username &&
@@ -41,7 +29,9 @@ export const listCredentials = async ({ username }) => {
 					var val = decrypt(jsonString, decrypted);
 					val = JSON.parse(val);
 					if (val["accounts"])
-						console.log(chalk.green.bold(JSON.stringify(val["accounts"])));
+						console.log(
+							chalk.green.bold(JSON.stringify(val["accounts"], null, 2))
+						);
 					else
 						console.log(
 							chalk.red.bold(
@@ -51,5 +41,6 @@ export const listCredentials = async ({ username }) => {
 				});
 			});
 		}
+		rl.close();
 	});
 };

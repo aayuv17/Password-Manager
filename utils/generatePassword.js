@@ -10,24 +10,24 @@ export const generatePassword = () => {
 	var digits = "0123456789";
 	var symbols = "!@#$%^&*()";
 	var passwordLength = Math.floor(Math.random() * 8) + 12;
-	console.log(passwordLength);
+	//console.log(passwordLength);
 	var password = "";
 	var random = randomNo(lowercase.length);
 	password += lowercase.substring(random, random + 1);
-	console.log(password);
+	//console.log(password);
 	var random = randomNo(uppercase.length);
 	password += uppercase.substring(random, random + 1);
-	console.log(password);
+	//console.log(password);
 	var random = randomNo(digits.length);
 	password += digits.substring(random, random + 1);
-	console.log(password);
+	//console.log(password);
 	var random = randomNo(symbols.length);
 	password += symbols.substring(random, random + 1);
-	console.log(password);
+	//console.log(password);
 	for (var i = 0; i <= passwordLength - 4; i++) {
 		var random = randomNo(chars.length);
 		password += chars.substring(random, random + 1);
-		console.log(password);
+		//console.log(password);
 	}
 	password = shuffle(password);
 	return password;

@@ -48,3 +48,8 @@ To install & correctly use this tool:
 4. Execute the command: npm i -g
 5. Execute the command: password-manager help
 6. The guidelines mentioned in the help instructions can be used to execute various operations with the tool now.
+
+### Tool Commands Usage
+
+- password-manager help
+  ![Help Command](./images/help.png)
